@@ -1,0 +1,15 @@
+services:
+  waste-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: waste-app
+
+    ports:
+      - "5000:5000"
+
+    env_file:
+      - .env
+
+    restart: unless-stopped

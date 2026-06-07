@@ -1,0 +1,16 @@
+.venv
+__pycache__
+.pytest_cache
+.git
+.gitignore
+
+tests
+dataset
+dataset.zip
+grafik_hasil.zip
+
+*.pyc
+*.pyo
+*.pyd
+
+.env
