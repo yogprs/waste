@@ -1,0 +1,193 @@
+import numpy as np
+from unittest.mock import patch, MagicMock
+from detection import detect_trash, history
+
+
+# =========================
+# HELPER: fake frame
+# =========================
+def fake_frame():
+    return np.ones((300, 300, 3), dtype=np.uint8)
+
+
+# =========================
+# TEST: kondisi blur (harus skip)
+# =========================
+@patch("detection.cv2.Laplacian")
+@patch("detection.cv2.cvtColor")
+@patch("detection.face_cascade.detectMultiScale")
+def test_detect_blur(mock_faces, mock_cvt, mock_lap):
+    frame = fake_frame()
+
+    mock_faces.return_value = []  # tidak ada wajah
+    mock_cvt.return_value = np.zeros((300, 300), dtype=np.uint8)
+
+    # blur rendah
+    mock_lap.return_value.var.return_value = 10
+
+    result_frame, label, label_with_accuracy, accuracy = detect_trash(frame)
+
+    assert label is None
+    assert label_with_accuracy is None
+    assert accuracy is None
+
+
+# =========================
+# TEST: ada wajah (harus skip)
+# =========================
+@patch("detection.cv2.Laplacian")
+@patch("detection.cv2.cvtColor")
+@patch("detection.face_cascade.detectMultiScale")
+def test_detect_face_skip(mock_faces, mock_cvt, mock_lap):
+    frame = fake_frame()
+
+    # wajah terdeteksi di tengah
+    mock_faces.return_value = [(100, 100, 50, 50)]
+    mock_cvt.return_value = np.zeros((300, 300), dtype=np.uint8)
+    mock_lap.return_value.var.return_value = 100  # tidak blur
+
+    result_frame, label, _, _ = detect_trash(frame)
+
+    assert label is None
+
+
+# =========================
+# TEST: skin terlalu banyak (harus skip)
+# =========================
+@patch("detection.cv2.inRange")
+@patch("detection.cv2.Laplacian")
+@patch("detection.cv2.cvtColor")
+@patch("detection.face_cascade.detectMultiScale")
+def test_detect_skin_skip(mock_faces, mock_cvt, mock_lap, mock_inrange):
+    frame = fake_frame()
+
+    mock_faces.return_value = []
+    mock_cvt.return_value = np.zeros((300, 300), dtype=np.uint8)
+    mock_lap.return_value.var.return_value = 100
+
+    # semua pixel dianggap kulit → ratio tinggi
+    mock_inrange.return_value = np.ones((200, 200), dtype=np.uint8) * 255
+
+    result_frame, label, _, _ = detect_trash(frame)
+
+    assert label is None
+
+
+# =========================
+# TEST: prediksi berhasil (confidence tinggi)
+# =========================
+@patch("detection.model_cls.predict")
+@patch("detection.cv2.resize")
+@patch("detection.cv2.inRange")
+@patch("detection.cv2.Laplacian")
+@patch("detection.cv2.cvtColor")
+@patch("detection.face_cascade.detectMultiScale")
+def test_detect_success(
+    mock_faces,
+    mock_cvt,
+    mock_lap,
+    mock_inrange,
+    mock_resize,
+    mock_predict
+):
+    frame = fake_frame()
+
+    history.clear()
+
+    mock_faces.return_value = []
+    mock_cvt.return_value = np.zeros((300, 300), dtype=np.uint8)
+    mock_lap.return_value.var.return_value = 100
+
+    # skin kecil
+    mock_inrange.return_value = np.zeros((200, 200), dtype=np.uint8)
+
+    mock_resize.return_value = np.ones((224, 224, 3))
+
+    # prediksi tinggi (index 0)
+    mock_predict.return_value = np.array([[0.9, 0.1]])
+
+    # isi history minimal 3x
+    for _ in range(3):
+        result_frame, label, label_with_accuracy, accuracy = detect_trash(frame)
+
+    assert label is not None
+    assert "%" in accuracy
+
+
+# =========================
+# TEST: confidence rendah
+# =========================
+@patch("detection.model_cls.predict")
+@patch("detection.cv2.resize")
+@patch("detection.cv2.inRange")
+@patch("detection.cv2.Laplacian")
+@patch("detection.cv2.cvtColor")
+@patch("detection.face_cascade.detectMultiScale")
+def test_detect_low_confidence(
+    mock_faces,
+    mock_cvt,
+    mock_lap,
+    mock_inrange,
+    mock_resize,
+    mock_predict
+):
+    frame = fake_frame()
+
+    history.clear()
+
+    mock_faces.return_value = []
+    mock_cvt.return_value = np.zeros((300, 300), dtype=np.uint8)
+    mock_lap.return_value.var.return_value = 100
+    mock_inrange.return_value = np.zeros((200, 200), dtype=np.uint8)
+
+    mock_resize.return_value = np.ones((224, 224, 3))
+
+    # confidence rendah (< threshold)
+    mock_predict.return_value = np.array([[0.4, 0.6]])
+
+    for _ in range(3):
+        result_frame, label, _, _ = detect_trash(frame)
+
+    assert label is None
+
+
+# =========================
+# TEST: history smoothing bekerja
+# =========================
+@patch("detection.model_cls.predict")
+@patch("detection.cv2.resize")
+@patch("detection.cv2.inRange")
+@patch("detection.cv2.Laplacian")
+@patch("detection.cv2.cvtColor")
+@patch("detection.face_cascade.detectMultiScale")
+def test_detect_history_smoothing(
+    mock_faces,
+    mock_cvt,
+    mock_lap,
+    mock_inrange,
+    mock_resize,
+    mock_predict
+):
+    frame = fake_frame()
+
+    history.clear()
+
+    mock_faces.return_value = []
+    mock_cvt.return_value = np.zeros((300, 300), dtype=np.uint8)
+    mock_lap.return_value.var.return_value = 100
+    mock_inrange.return_value = np.zeros((200, 200), dtype=np.uint8)
+
+    mock_resize.return_value = np.ones((224, 224, 3))
+
+    # prediksi berubah-ubah
+    mock_predict.side_effect = [
+        np.array([[0.6, 0.4]]),
+        np.array([[0.7, 0.3]]),
+        np.array([[0.8, 0.2]])
+    ]
+
+    for _ in range(3):
+        result_frame, label, _, _ = detect_trash(frame)
+
+    # hasil akhir dari rata-rata harus stabil
+    assert label is not None

@@ -216,3 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+best_model.h5
+dataset/test/Non-Organik
+dataset/test/Organik
+dataset/train/Non-Organik
+dataset/train/Organik

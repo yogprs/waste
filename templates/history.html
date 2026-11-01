@@ -1,0 +1,427 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Riwayat</title>
+    <link rel="stylesheet" href="/static/css/history.css" />
+  </head>
+  <body class="body-history">
+    <aside>
+      <div class="sidebar-container">
+        <!-- <h1 class="title-app">Waste Detection</h1> -->
+        <div class="sidebar-user">
+          <div class="sidebar-user-image">
+            <img
+              class="image-user"
+              id="image-user"
+              data-alt="image-user"
+              src=""
+            />
+          </div>
+          <div>
+            <p class="user-name" id="user-name">-</p>
+            <p class="user-description" id="email">-</p>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="sidebar-menu" data-href="/dashboard">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="currentColor"
+              d="M13 9V3h8v6zM3 13V3h8v10zm10 8V11h8v10zM3 21v-6h8v6zm2-10h4V5H5zm10 8h4v-6h-4zm0-12h4V5h-4zM5 19h4v-2H5zm4-2"
+            />
+          </svg>
+          <span class="font-headline font-medium text-sm">Dasbor</span>
+        </button>
+        <button class="sidebar-menu" data-href="/detection">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="currentColor"
+              d="M5 21q-.825 0-1.412-.587T3 19v-4h2v4h4v2zm10 0v-2h4v-4h2v4q0 .825-.587 1.413T19 21zM3 9V5q0-.825.588-1.412T5 3h4v2H5v4zm16 0V5h-4V3h4q.825 0 1.413.588T21 5v4zm-9.825 5.825Q8 13.65 8 12t1.175-2.825T12 8t2.825 1.175T16 12t-1.175 2.825T12 16t-2.825-1.175"
+            />
+          </svg>
+          <span class="font-headline font-medium text-sm">Deteksi</span>
+        </button>
+        <button class="sidebar-menu" data-href="/history">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="currentColor"
+              d="M12 21q-3.45 0-6.012-2.287T3.05 13H5.1q.35 2.6 2.313 4.3T12 19q2.925 0 4.963-2.037T19 12t-2.037-4.962T12 5q-1.725 0-3.225.8T6.25 8H9v2H3V4h2v2.35q1.275-1.6 3.113-2.475T12 3q1.875 0 3.513.713t2.85 1.924t1.925 2.85T21 12t-.712 3.513t-1.925 2.85t-2.85 1.925T12 21m2.8-4.8L11 12.4V7h2v4.6l3.2 3.2z"
+            />
+          </svg>
+          <span class="font-headline font-medium text-sm">Riwayat</span>
+        </button>
+        <!-- Menu Kelola User: hanya tampil untuk admin (dikontrol oleh sidebar.js) -->
+        <button id="add-user-btn" class="sidebar-menu" data-href="/users" style="display:none;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M15 14c-2.67 0-8 1.33-8 4v2h16v-2c0-2.67-5.33-4-8-4m-9-4V7H4v3H1v2h3v3h2v-3h3v-2m6 2a4 4 0 0 0 0-8a4 4 0 0 0 0 8"/>
+          </svg>
+          <span class="font-headline font-medium text-sm">Kelola User</span>
+        </button>
+      </nav>
+      <div class="sidebar-down">
+        <a class="sidebar-additional logout">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="currentColor"
+              d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h7v2zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5z"
+            />
+          </svg>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <div class="history-container">
+      <!-- TopMenu -->
+      <header class="top-menu-container glass-panel">
+        <div class="top-menu">
+          <h2 class="top-menu-label">Deteksi Sampah</h2>
+          <div class="top-menu-list">
+            <a class="menu" href="/">Beranda</a>
+            <a class="menu" href="/guide">Panduan</a>
+            <a class="menu" href="/history">Riwayat Deteksi</a>
+          </div>
+          <div class="top-menu-right">
+            <div class="top-menu-text">
+              <p class="nav-user-name" id="nav-user-name">-</p>
+              <p class="nav-user-description" id="nav-email">-</p>
+            </div>
+            <div class="nav-profile-wrapper">
+              <div class="user-image" id="nav-profile-trigger">
+                <img
+                  class="image-user"
+                  id="nav-image-user"
+                  data-alt="image-user"
+                  src=""
+                />
+              </div>
+
+              <!-- Dropdown Menu -->
+              <div id="nav-profile-menu" class="nav-profile-menu">
+                <button class="nav-menu-item" id="dashboard-profile">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path
+                      fill="currentColor"
+                      d="M13 9V3h8v6zM3 13V3h8v10zm10 8V11h8v10zM3 21v-6h8v6z"
+                    />
+                  </svg>
+                  Dasbor
+                </button>
+                <button class="nav-menu-item" id="open-profile">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M5.85 17.1q1.275-.975 2.85-1.537T12 15t3.3.563t2.85 1.537q.875-1.025 1.363-2.325T20 12q0-3.325-2.337-5.663T12 4T6.337 6.338T4 12q0 1.475.488 2.775T5.85 17.1m3.663-5.113Q8.5 10.976 8.5 9.5t1.013-2.488T12 6t2.488 1.013T15.5 9.5t-1.012 2.488T12 13t-2.488-1.012M12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"
+                    />
+                  </svg>
+                  Profile
+                </button>
+                <button class="nav-menu-item logout">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h7v2zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5z"
+                    />
+                  </svg>
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <main class="page-content-container">
+        <div class="page-content-header">
+          <h1 class="page-content-label">Riwayat Deteksi</h1>
+          <p class="page-content-paragraph">
+            Tinjau dan kelola kontribusi lingkungan serta riwayat deteksi sampah
+            berbasis AI Anda sebelumnya.
+          </p>
+        </div>
+        <!-- Bulk Actions & Filters Bar -->
+        <section class="action-container">
+          <div class="filter-sorting-container">
+            <!-- Category Filter -->
+            <div class="category-filter">
+              <button class="filter-all filter-option active" data-label="">
+                Semua
+              </button>
+              <button class="filter-organic filter-option" data-label="Organik">
+                Organik
+              </button>
+              <button
+                class="filter-non-organic filter-option"
+                data-label="Non-Organik"
+              >
+                Non-Organik
+              </button>
+            </div>
+            <!-- Sorting controls -->
+            <div class="sorting-controls">
+              <select id="sorting-time" class="sorting-time"></select>
+              <button class="sorting-accuracy">
+                Akurasi
+                <span class="accuracy-icon default active">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M10 18v-2h4v2zm-4-5v-2h12v2zM3 8V6h18v2z"
+                    />
+                  </svg>
+                </span>
+                <span class="accuracy-icon sorted">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="m19.775 22.625l-18.4-18.4L2.8 2.8l18.4 18.4zM15.825 13l-2-2H18v2zm-5-5l-2-2H21v2zM10 18v-2h4v2zm-4-5v-2h4.15v2zM3 8V6h2.15v2z"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+          <!-- Selection Controls -->
+          <div class="selection-controls hidden">
+            <div class="selection-wrap">
+              <label class="select-all-label group">
+                <input class="custom-checkbox" type="checkbox" />
+                <span class="select-all-text">Seleksi Semua</span>
+              </label>
+              <div class="line-border"></div>
+              <span class="total-item-selected">3 items dipilih</span>
+            </div>
+            <div class="delete-button-wrap">
+              <button class="delete-button">
+                <span class="delete-button-icon"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z"
+                    /></svg
+                ></span>
+                Hapus
+              </button>
+            </div>
+          </div>
+        </section>
+        <!-- History Grid -->
+        <section class="history-grid" id="historyGrid"></section>
+        <!-- Pagination -->
+        <div class="pagination"></div>
+      </main>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <nav class="bottom-nav">
+      <button class="bottom-nav-button" data-url="/dashboard">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            d="M13 9V3h8v6zM3 13V3h8v10zm10 8V11h8v10zM3 21v-6h8v6zm2-10h4V5H5zm10 8h4v-6h-4zm0-12h4V5h-4zM5 19h4v-2H5zm4-2"
+          />
+        </svg>
+        <span class="bottom-nav-text">Dasbor</span>
+      </button>
+      <button class="bottom-nav-button" data-url="/detection">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            d="M5 21q-.825 0-1.412-.587T3 19v-4h2v4h4v2zm10 0v-2h4v-4h2v4q0 .825-.587 1.413T19 21zM3 9V5q0-.825.588-1.412T5 3h4v2H5v4zm16 0V5h-4V3h4q.825 0 1.413.588T21 5v4zm-9.825 5.825Q8 13.65 8 12t1.175-2.825T12 8t2.825 1.175T16 12t-1.175 2.825T12 16t-2.825-1.175"
+          />
+        </svg>
+        <span class="bottom-nav-text">Deteksi</span>
+      </button>
+      <button class="bottom-nav-button" data-url="/history">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            d="M12 21q-3.45 0-6.012-2.287T3.05 13H5.1q.35 2.6 2.313 4.3T12 19q2.925 0 4.963-2.037T19 12t-2.037-4.962T12 5q-1.725 0-3.225.8T6.25 8H9v2H3V4h2v2.35q1.275-1.6 3.113-2.475T12 3q1.875 0 3.513.713t2.85 1.924t1.925 2.85T21 12t-.712 3.513t-1.925 2.85t-2.85 1.925T12 21m2.8-4.8L11 12.4V7h2v4.6l3.2 3.2z"
+          />
+        </svg>
+        <span class="bottom-nav-text">Riwayat</span>
+      </button>
+      <button class="bottom-nav-button logout">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h7v2zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5z"
+          />
+        </svg>
+        <span class="bottom-nav-text">Logout</span>
+      </button>
+    </nav>
+
+    <!-- Modal Profile -->
+    <div id="profile-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Profile</h3>
+          <button id="close-modal">&times;</button>
+        </div>
+
+        <form id="profile-form" class="modal-body">
+          <div class="form-group">
+            <div class="input-label">
+              <label for="name">Nama</label>
+              <span class="required">*</span>
+            </div>
+            <input
+              name="name"
+              type="text"
+              id="profile-name"
+              placeholder="John Doe"
+              autocomplete="name"
+            />
+          </div>
+
+          <div class="form-group">
+            <div class="input-label">
+              <label for="email">Email</label>
+              <span class="required">*</span>
+            </div>
+            <input
+              name="email"
+              type="email"
+              id="profile-email"
+              placeholder="nama@contoh.com"
+              autocomplete="email"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              id="password"
+              name="password"
+              class="input-data"
+              placeholder="••••••••"
+              type="password"
+            />
+          </div>
+          <p id="errorMsg" style="color: red"></p>
+
+          <button type="button" class="btn-delete">Hapus Akun</button>
+          <button type="submit" class="btn-save">Simpan</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal Preview Image -->
+    <div
+      id="image-preview-modal"
+      class="modal-overlay"
+      style="background-color: #00000080"
+    >
+      <div
+        class="modal-content"
+        style="
+          max-width: 600px;
+          background-color: transparent;
+          position: relative;
+        "
+      >
+        <button
+          id="close-image-preview"
+          style="
+            background-color: rgb(234, 237, 234);
+            color: black;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 4px 8px;
+            border-radius: 9999px;
+            cursor: pointer;
+          "
+        >
+          &times;
+        </button>
+        <img
+          id="preview-image"
+          src=""
+          style="width: 100%; border-radius: 10px"
+        />
+      </div>
+    </div>
+
+    <script src="/static/js/navbar.js"></script>
+    <script src="/static/js/history.js"></script>
+    <script src="/static/js/sidebar.js"></script>
+    <script src="/static/js/menuBottom.js"></script>
+    <script src="/static/js/middleware.js"></script>
+  </body>
+</html>
